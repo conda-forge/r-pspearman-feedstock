@@ -1,5 +1,4 @@
 {% set version = "0.3-1" %}
-
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -8,14 +7,13 @@ package:
   version: {{ version|replace("-", "_") }}
 
 source:
-  fn: pspearman_{{ version }}.tar.gz
   url:
-    - https://cran.r-project.org/src/contrib/pspearman_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/pspearman/pspearman_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/pspearman_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/pspearman/pspearman_{{ version }}.tar.gz
   sha256: 903f1b8f5bffb3937ec7eed7c7fa0e9c34eb572592f5f05d4bba13a9b89d8326
 
 build:
-  merge_build_host: true  # [win]
+  merge_build_host: True  # [win]
   number: 0
   rpaths:
     - lib/R/lib/
@@ -23,26 +21,32 @@ build:
 
 requirements:
   build:
-    - posix                # [win]
-    - {{ compiler('c') }}        # [unix]
-    - {{ compiler('m2w64_c') }}  # [win]
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ posix }}filesystem        # [win]
+    - {{ posix }}make
+    - {{ posix }}sed               # [win]
+    - {{ posix }}coreutils         # [win]
+    - {{ posix }}zip               # [win]
+    - cross-r-base {{ r_base }}    # [build_platform != target_platform]
   host:
     - r-base
-
   run:
     - r-base
+    - {{ native }}gcc-libs         # [win]
 
 test:
   commands:
-    - $R -e "library('pspearman')"  # [not win]
+    - $R -e "library('pspearman')"           # [not win]
     - "\"%R%\" -e \"library('pspearman')\""  # [win]
 
 about:
   home: https://CRAN.R-project.org/package=pspearman
-  license: GPL-3
+  license: GPL-3.0-only
   summary: Spearman's rank correlation test with precomputed exact null distribution for n <= 22.
   license_family: GPL3
-  license_file: {{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3
+  license_file:
+    - {{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3
 
 extra:
   recipe-maintainers:
