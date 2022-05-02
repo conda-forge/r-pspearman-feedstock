@@ -1,4 +1,4 @@
-{% set version = '0.3-0' %}
+{% set version = "0.3-1" %}
 
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
@@ -12,11 +12,11 @@ source:
   url:
     - https://cran.r-project.org/src/contrib/pspearman_{{ version }}.tar.gz
     - https://cran.r-project.org/src/contrib/Archive/pspearman/pspearman_{{ version }}.tar.gz
-  sha256: 9d19ecb03b8d9a4f31618fd806a1c752e376b5ee81ae97b6a9db9675d4c3b5d0
+  sha256: 903f1b8f5bffb3937ec7eed7c7fa0e9c34eb572592f5f05d4bba13a9b89d8326
 
 build:
-  merge_build_host: True  # [win]
-  number: 1003
+  merge_build_host: true  # [win]
+  number: 0
   rpaths:
     - lib/R/lib/
     - lib/
@@ -42,7 +42,7 @@ about:
   license: GPL-3
   summary: Spearman's rank correlation test with precomputed exact null distribution for n <= 22.
   license_family: GPL3
-  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
+  license_file: {{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3
 
 extra:
   recipe-maintainers:
